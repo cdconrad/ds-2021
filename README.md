@@ -13,18 +13,18 @@ This is a public repository of my teaching materials from the 2021 iteration of 
 
 Credit must also be given to Al Sweigart for creating supporting material for the early labs. You can purchase his book at https://automatetheboringstuff.com/
 
-Lessons:
+## Lessons:
 
-Lab 1 - Hello Python world!
-Lab 2 - A function for validating Elections Nova Scotia's records
-Lab 3 - Basic data cleaning of Halifax's housing data
-Lab 4 - Accessing data sources
-Lab 5 - Making big(ger) Airbnb data eas(ier) with data frames
-Lab 6 - Visually analyze iPhone app downloads
-Lab 7 - Do people have different attitudes towards dating during Covid?
-Lab 8 - Discover associations between e-commerce purchases
-Lab 9 - Detect heart disease in anonmymous patients
-Lab 10 - Create and manage a digital bookstore collection
-Lab 11 - Identify Halifax's Twitter influencers
-Lab 12 - Getting started with R
-Bonus lab - Second steps with R
+- Lab 1 - Hello Python world!
+- Lab 2 - A function for validating Elections Nova Scotia's records
+- Lab 3 - Basic data cleaning of Halifax's housing data
+- Lab 4 - Accessing data sources
+- Lab 5 - Making big(ger) Airbnb data eas(ier) with data frames
+- Lab 6 - Visually analyze iPhone app downloads
+- Lab 7 - Do people have different attitudes towards dating during Covid?
+- Lab 8 - Discover associations between e-commerce purchases
+- Lab 9 - Detect heart disease in anonmymous patients
+- Lab 10 - Create and manage a digital bookstore collection
+- Lab 11 - Identify Halifax's Twitter influencers
+- Lab 12 - Getting started with R
+- Bonus lab - Second steps with R
