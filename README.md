@@ -13,6 +13,8 @@ This is a public repository of my teaching materials from the 2021 iteration of 
 
 Credit must also be given to Al Sweigart for creating supporting material for the early labs. You can purchase his book at https://automatetheboringstuff.com/
 
+I recommend cloning this folder as a whole and opening it in Jupyter using Anaconda. You can learn how to download and configure Anaconda here: https://www.anaconda.com/products/individual
+
 ## Lessons:
 
 - Lab 1 - Hello Python world!
@@ -28,3 +30,9 @@ Credit must also be given to Al Sweigart for creating supporting material for th
 - Lab 11 - Identify Halifax's Twitter influencers
 - Lab 12 - Getting started with R
 - Bonus lab - Second steps with R
+
+## About my teaching approach
+
+I jokingly refer to this course as "scrappy data science for managers". It's "scrappy" in the sense that I take an _as needed_ approach to teaching, rather than a theoretical approach. We do not cover theoretical math or the like, and only employ statistics and machine learning to solve tangible problems. In fact, each week is structured around a tangible problem to help keep the otherwise abstract concepts tangible and relevant to people in managerial professions.
+
+These labs start out easy and then ramp up quickly. You can think of labs 1-4 as being a sort of "introduction to Python for managers" module. Labs 5-9 cover substantial topics in data science with Pandas. Labs 10-12 cover additional subjects: SQL, social media APIs and the R programming language.

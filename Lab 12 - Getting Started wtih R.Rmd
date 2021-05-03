@@ -1,0 +1,191 @@
+---
+title: Lab 12 Getting Started with R
+author: © Colin Conrad
+date:  13/03/2021
+output: 
+  html_document:
+    toc: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This is an introductory tutorial on R programming using the Greenhouse Gas datasets. This document was created in R Markdown and provides copies of code (with explanations) which you can try in your own R environment. It is assumed that you have successfully installed R, R for Jupyter, and/or R Studio (recommended) on your computer before starting this. If you need help learning how to install R Studio [please learn more here](https://rstudio.com/products/rstudio/download/#download). 
+
+__Use of this document is subject to the terms of the [MIT Open Source License](https://opensource.org/licenses/MIT)__
+
+### What to submit for this week's lab
+
+Unlike past labs that used the Jupyter Notebook, I do not expect you to do so with this week's lab (though you can if you want). Instead, please submit your R scripts in a single file, either expressed as R Markdown or a saved and commented R script. 
+
+## Hello R World!
+
+If you are reading this tutorial, you are probably new to programming and R is your first kick at the can. The first thing to know is that R is indeed a real programming language, though it is primarily used for statistical analysis. It is among the most popular quantitative research tools used in academia and R programming is also widely coveted among organizations and companies. You should learn R. If you believe that code will also play a big role in your professional career, you should also consider learning another programming language (such as Python or Java) which are better suited to building non-statistical software programs.
+
+Enough about that! Let's learn about R by starting with something simple. Traditionally, the very first thing that people do when learning a new programming language is learn how to print 'hello world'! Try copying and pasting the following code into your R terminal or your script file.
+
+```{r}
+# prints hello world
+print('hello world')
+```
+
+If you did this successfully, R will print the __string__ 'hello world' (more on strings later). Congratulations, you probably just run your first R script! This is a bigger accomplishment than you might think. You have taken your first steps into the wonderful world of code. Let's try it again with a message of encouragement.
+
+```{r}
+# prints some encouragement
+print('I am taking the first steps towards coding!')
+```
+
+Let's break down the concepts above a bit. First, you probably see the __#__ bit at the top. This is a comment. Comments are cool because they describe the code that you are executing, without themselves being executed. These are an essential part of writing good code because they tell other readers what the code does. It might seem silly at first, but once you start collaborating with other people you will understand the value of comments.
+
+The second thing worth discussing is the print('hello world') bit. R's print() function is a default function in R which prints the string contained within the parentheses in the console. This is super handy when trying to debug code, and serves as a great starting point for our tutorial.
+
+### Challenge Question 1 (1 point)
+Can you write a script to print the phrase 'SUCA is awesome!'? Try using your R interpreter or R script file to accomplish this task.
+
+## Assign Variables
+
+So far so good! As previously discussed, programming languages can store data in the form of variables. In R, variables can consist of many different types of data, such as: numbers (called __'integers'__), decimals (called __'floats'__), words (called __'strings'__), and more complex data structures which we may explore later. Using data stored in variables, we can create code that does virtually anything that we can imagine!
+
+Building on the main theme of this course, let's learn by doing.  According to our datasets, in 2005 Canada emitted 729.74 Mt of carbon-equivelent Greenhouse Gases total. We can save this value for use later by specifying a variable.
+
+```{r}
+ghg_2005 = 729.74 # this a float value is extracted from the spreadsheet
+```
+
+Now R will remember this variable. Let's retrieve it.
+
+```{r}
+ghg_2005
+```
+
+This is good. Canada has commited to reducing its GHG emissions to 70% of 2005 levels by 2030. Now, you know that programming languages are just complicated math machines, which can help make this easy for us. Say that we wanted to calculate the amount of GHG emissions that Canada has committed, we could simply multiply the 2005 value by 0.7. 
+
+```{r}
+ghg_2005 * 0.7 # multiplies the old variable by 0.7
+```
+
+This is cool, but only goes so far. With a programming language, you can also save a variable as a calculation of another variable. For example, if we wanted to save a new variable, we could instead specify the code as follows.
+
+```{r}
+ghg_target = ghg_2005 * 0.7 # save our calculation as a variable
+ghg_target # retrieve the new variable
+```
+
+### Challenge Question 2 (1 point)
+Try saving Canada's GHG emissions from 1990 as a variable. In 1997 Canada adopted the Kyoto Accord, and it committed to reducing its GHG emissions to 18% below this level by 2020. Did we succeed?
+
+## Vectors
+
+Any old programming language can save variables and compute math though. You are using __R__, and typically people use R to mince lots of data. R has a few default data structures which are frequently used and not always present in other programming languages and it is worth discussing these before calling it a day.
+
+The first of these is called a __vector__. Vectors are a series of values of the same data type. Though many programming languages leverage similar structures (e.g. most languages have arrays) vectors are different in the sense that all components need to be the same data type. This makes them very efficient to compute.
+
+Let's start by saving Canada's total GHG emissions in a vector. The following code accomplishes this.
+
+```{r}
+#ghg emissions 2001-2018, as integers
+ghg = c(720,724,740,742,730,721,742,723,680,691,702,710,721,721,720,706,714,729)
+```
+Vectors are useful for many reasons. First, it is much more convenient to save larger amounts of data in a vector, rather than as individual variables. Second, vectors are __iterable__. For example, if we wished to retrieve the first value, we could write the following.
+
+```{r}
+ghg[1] # retrieves the value for 2001
+```
+This can simplify our life in a lot of ways, especially once you know how to use __loops__, but that's a story for another day. For now though, there is a simple way that this helps. Say we wanted to track our progress towards the Paris agreement. We can find the difference in GHG emissions between 2018 and 2005. We could accomplish that using the following.
+
+```{r}
+#ghg emissions 2005 minus 2018
+ghg[5] - ghg[18]
+```
+We have only reduced our GHG emissions by 1 Mt per year; this is far below our target reduction target of 219 by 2030. We clearly have a lot of work to do!
+
+### Challenge Question 3 (1 point)
+How would you write a vector that includes the GHG emissions from 1990 to 2018? You can find a quick reference table of the [1990-2000 values here](https://www.canada.ca/en/environment-climate-change/services/environmental-indicators/greenhouse-gas-emissions.html) by clicking 'Data table for the long description'. 
+
+Create a new vector called __ghg_1990__ which contains the complete dataset, including the data from the 1990s.
+
+## Plots
+One of R's most powerful features are its plotting and data visualization features. Creating plots in R is very easy... if you want something minimal. For example.
+
+```{r}
+plot(ghg) # plots the ghg vector
+```
+
+This graph is a scatterplot and is not terribly useful as it is now. Though the graph gives some indication that GHG emissions are provided on the Y axis, it does not provide any meaningful information on the X axis. This graph needs a second vector to be useful. Let's specify the years as a vector of equal length.
+
+
+```{r}
+# create a years vector
+years = c(2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018)
+plot(years,ghg) # plots the years on the x axis and ghg on the y axis
+```
+
+This is better because we at least have two clear axes. However, this is still far from useful, as it is unclear what the GHG values represent. The scatter plot visualization is also not the most useful for telling a story about changes over time.
+
+To improve on this, we can specify labels for our graph, as well as the type of graph and its colour. To do this, we would add additional features to our graph __object__ when first creating it. The following code creates a much more clear graph by specifying various features for the graph. 
+
+```{r}
+plot(
+  x=years, # x axis
+  xlab='Years', #x label
+  y=ghg, # y axis
+  ylab="GHG Emissions Canada (CO2e)", # y label
+  type="l", # type is 'line'
+  col="blue", # color is 'blue'
+  main="Changes in Canada's GHG Emissions Over Time" # graph title
+  )
+```
+
+That's a bit better. The graph is a little basic, but it does the job! Let's see if we can improve on this in the last section.
+
+### Challenge Question 4 (1 point)
+Can you create a new graph that includes the data from the 1990s? Display a similar line graph using a red colour instaed. 
+
+_Hint:_ Remember, you will need an expanded __years__ vector. Consider making a new vector called __years_1990__
+
+## Libraries and Data Frames
+Finally, no discussion about R would be complete without a discussion about R libraries. Libraries are collections of R code (as well as data) which are maintained by other R users and stored in the centralized _Comprehensive R Archive Network (CRAN)_. All libraries created by other on CRAN users can be downloaded and used to accelerate our analysis.
+
+One of the most popular graphing libraries is called ggplot2. This is a powerful library for making graphs, and chances are that you already have it installed on your computer. To access the ggplot2 library, you simply execute the following.
+
+```{r}
+library(ggplot2)
+```
+
+If you don't have it installed already, you may receive an error. If this is the case, you need to install it first. You can install ggplot2 by using the _install.packages_ function. The following code should do the trick. Don't forget to activate the library after installing it!
+
+```
+install.packages('ggplot2')
+```
+
+Once you have ggplot2 up and running, we can start to create a more beautiful graph. In order to do this though, we need to format our data into a __dataframe__, one of the basic structures of data in R. Data frames are an efficient, two-dimensional spreadsheet-like structure where data is organized in a row-column manner. 
+
+To create a data frame out of our existing vectors, we can use the following code. 
+
+```{r}
+ghg_time = data.frame(years, ghg) # creates a data frame from these two vectors
+```
+
+Let's check on that data frame to see if it was created properly. We can use __head()__ to observe only the first six values.
+
+```{r}
+head(ghg_time) # head() gives only the first six values of the data frame
+```
+
+With our data frame in hand, we can create our first ggplot graph! A ggplot graph works slightly differently from a regular graph in its notation. The following will create a basic visualization with a few more features. To learn more about ggplot, check out [its tidyverse documentation](https://ggplot2.tidyverse.org/index.html).
+
+```{r}
+ggplot(ghg_time, aes(years,ghg)) + # specify the data, and the aesthetic mapping
+  geom_point(shape=21, color="black", fill="black", size=4) + # specify points
+  geom_line(color="steelblue", size=2) + # specify the line
+  xlab("Year") + # x label
+  ylab("GHG Emissions Canada (CO2e)") + # y label
+  ggtitle("Changes in Canada's GHG Emissions Over Time") # graph title
+```
+
+Finally, if you are interested, you can learn more about the various [CRAN R libraries here](https://cran.r-project.org/web/packages/available_packages_by_name.html). This concludes our first tutorial. If you are interested in learning more about R, check out the second tutorial to follow. In that tutorial, we will move beyond the bare basics and use actual datasets in our analysis.
+
+### Challenge Question 5 (1 point)
+One of the most fun R libraries is the 'Rcrawler' library. This will allow you to scrape websites. How would you install and use the Rcrawler library to scrape dal.ca? You can [learn more about it here](https://cran.r-project.org/web/packages/Rcrawler/Rcrawler.pdf).

@@ -1,0 +1,181 @@
+---
+title: "Second Steps with R (non-credit lab)"
+author: "Colin Conrad"
+date: "13/03/2021"
+output: 
+  html_document:
+    toc: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This is a second introductory tutorial on R programming using the Greenhouse Gas datasets. This document was created in Jupyter Notebook and provides copies of code (with explanations) which you can try in your own R environment. It is assumed that you have successfully installed R (not recommended), R Studio (recommended) or Anaconda on your computer before starting this and that you have completed "Getting Started with R".
+
+__Use of this document is subject to the terms of the [MIT Open Source License](https://opensource.org/licenses/MIT)__
+
+### What to submit
+This lab is so _extra_ (ok, bad joke). Seriously, this is non-credit, meaning that you cannot submit it for grades. However, I thought that some of you might find it useful, in case you want to dig more deeply into the R programming language.
+
+## Load a data frame and understand the data
+Picking up from the last tutorial, you should be familiar with a few key concepts. To summarize, in programming languages we can save variables (e.g. integers, floats and strings).In R, we can easily save vectors (series of similar variables). Combinations of vectors can be assembled into a data frame, which is a spreadsheet-like format. R allows us to easily create high quality (publishable, even) graphs.
+
+This week we will move beyond the bare basics and start working with the climate change data directly. Currently, the data is saved as a CSV file (comma separated values file) in our local folder. We can load that CSV file into our environment and save it as a data frame. The following code accomplishes this.
+```{r}
+dat <- read.csv('data/extra_GHG.csv') # loads the data frame from csv
+```
+
+It's always good to learn about our data frame by retrieving a summary. Let's retrieve a summary of the structure of our data using the `str` function.
+
+```{r}
+str(dat) # give a summary of the data's structure
+```
+
+From your experience last week, you can probably see the advantages of the data frame format. This structure is easily navigable in terms of vectors and variables. For example, if we wished to retrieve only the CO2eq values and save them as a vector, we could try the following.
+
+```{r}
+CO2eq_values <- dat$CO2eq # retrieves the CO2eq vector
+```
+Similarly, if we wished to retrieve only the first CO2eq value in the data frame (representing Alberta's total in 1990) we could do the following.
+
+```{r}
+alta_1990 <- dat$CO2eq[1] # retrieves the CO2eq for Alberta in 1990
+```
+Let's dig slightly deeper. While `str()` summarized the data's structure, it did not give us a clear understanding of the statistical values in the data. By default, R has the `summary()` function to achieve this. Try implementing `summary()` to learn more about the data.
+
+```{r}
+summary(dat) # retrieves a statistical summary of the data frame
+```
+Finally, we can also retrieve the first six values of the data using `head()`. This can be useful for getting a detailed idea of what the data frame looks like without digging into the whole set.
+```{r}
+head(dat)
+```
+
+### Challenge Question 1 (1 point)
+Similarly to `head()` you can use `tail()` to retrieve the last 6 rows of the data frame. Try implementing `tail()` to retrieve these values. What do these represent?
+
+## Plot Canada's GHG emissions over time
+With a data frame in hand, we can now re-create what we did last week, but more elegantly (or so you would think). At first glance, it seems like we could easily create a graph of this data which displays changes in emissions over time. However, the data is structured in a way that makes this difficult, as many of the values are summations of other values. For example, the plotting code that we used last week would not be sufficient for navigating this data frame.
+
+```{r}
+
+# NOTE: this might make your computer angry
+
+library(ggplot2) # import ggplot 2
+
+ggplot(dat, aes(Year, CO2eq)) + # specify the data, and the aesthetic mapping
+  geom_point(shape=21, color="black", fill="black", size=4) + # specify points
+  geom_line(color="steelblue", size=2) + # specify the line
+  xlab("Year") + # x label
+  ylab("GHG Emissions Canada (CO2e)") + # y label
+  ggtitle("Changes in Canada's GHG Emissions Over Time") # graph title
+```
+
+What we need is an effective way to navigate the data using . Fortunately, the `dplyr` makes this pretty easy, especially if you are familiar with SQL. It would be desirable to create a new data frame consisting only of the total GHG emissions for Canada over time. We could create such a data frame using the following code. You can [read more about the library here](https://www.rdocumentation.org/packages/dplyr/versions/0.7.8).
+
+```{r}
+library(dplyr) # note you might have to install this if you don't already have it
+```
+
+```{r}
+totals <- dat %>% # create a selection of dat
+  select(Year, Region, Index, CO2eq) %>% # select only the these columns
+  filter(Region == "Canada") %>% # apply a filter for only Canada (no provinces)
+  filter(Index == 0) # apply a filter for Index 0, which is total emissions
+```
+
+```{r}
+head(totals) # summarize the new data frame
+```
+
+This should look familiar, as these are the Year and CO2eq values that we saw last week, though as floats rather than integers. We should thus be able to apply them to a graph. However, there is an issue with the CO2eq-- this has been converted to a `chr` type rather than a numeric type. If we graph it using the code below, ggplot2 will not know how to plot the line.
+
+```{r}
+ggplot(totals, aes(Year, CO2eq)) + # specify the data, and the aesthetic mapping
+  geom_point(shape=21, color="black", fill="black", size=4) + # specify points
+  geom_line(color="steelblue", size=2) + # specify the line
+  xlab("Year") + # x label
+  ylab("GHG Emissions Canada (CO2e)") + # y label
+  ggtitle("Changes in Canada's GHG Emissions Over Time") # graph title
+```
+
+We can fix this by using the `as.numeric()` function, which converts a variable or vector to a numeric type. Use the code below to change the type and run the graph again. 
+
+```{r}
+totals$CO2eq <- as.numeric(totals$CO2eq) # converts the totals to numeric type
+
+ggplot(totals, aes(Year, CO2eq)) + # specify the data, and the aesthetic mapping
+  geom_point(shape=21, color="black", fill="black", size=4) + # specify points
+  geom_line(color="steelblue", size=2) + # specify the line
+  xlab("Year") + # x label
+  ylab("GHG Emissions Canada (CO2e)") + # y label
+  ggtitle("Changes in Canada's GHG Emissions Over Time") # graph title
+```
+
+### Challenge Question 2 (1 point)
+Can you modify the code above to retrieve the total emissions for Nova Scotia over time? Create a graph from this data.
+
+## Expand into oil and gas
+There has been considerable attention paid to the impact of Canada's oil and gas industries. To date, though Canada has held its GHG emissions steady, it has taken steps to invest in renewable energy. However, it is often claimed that the growth of the oil industries negate the impact of these investments. It would be interesting to compare the two.
+
+We can start by creating a new data frame that is a subset of the general data set. To retrieve these values, we would need to specify index values 1 and 16. We can use the "or" operator (expressed as `|` to do this). The code below creates a new data frame called `gas_electric`.
+
+```{r}
+gas_electric <- dat %>% # create a selection of dat
+  select(Year, Region, Index, Source, CO2eq) %>% # select only the these columns
+  filter(Region == "Canada") %>% # apply a filter for only Canada (no provinces)
+  filter(Index == 1 | Index == 16) # 1: oil and gas total, 16: electricity
+```
+
+We can now create a plot to see the impact. One useful visualization could be a stacked bar plot which illustrates the relative impact of electricity generation compared to oil and gas over time. To create a stacked bar chart we can use `geom_bar` similarly to our `geom_line` last time. We can also specify a fill color of our source of emissions using `fill=source`. The graph below illustrates these two sources. We can see how electricity was rougly equal to the oil industry in 1990, but over time shrank while oil and gas grew. By 2018, electricity was responsible for only around 1/4 of emissions of the oil and gas industry.
+
+```{r}
+ggplot(gas_electric, aes(x=Year, y=as.numeric(CO2eq), fill=Source)) + # specify the data, and the aesthetic mapping, including the source
+  geom_bar(position="stack", stat="identity") + # geom bar does the trick
+  xlab("Year") + # x label
+  ylab("GHG Emissions Canada (CO2e)") + # y label
+  ggtitle("Changes in Emissions from Electricity and Oil/Gas Over Time") # graph title
+```
+
+### Challenge Question 3 (1 point)
+How have the emissions from Canada's heavy industry fared over time? Modify the code above to create a graph that also includes Canada's heavy industry. Index 25 accounts for all sources related to heavy industry.
+
+## Assess the potential for policy impacts in Nova Scotia
+
+The Government of Canada recently released the details of its [substantial climate action plan](https://www.cbc.ca/news/politics/net-zero-carbon-climate-trudeau-1.5838736), including tangible steps to meet its current climate action commitments. A large part of this plan concerns the electrification of Canada's home and transportation sectors. We can ask whether these initiatives could have an impact on Nova Scotia's overall GHG emissions.
+
+To assess this, we can observe a specific ponit in time in the data, for example, just the emissions from 2018. The code below retrieves the values from NS for 2018, with only the top level indices for each of the sources.
+
+```{r}
+ns <- dat %>% # create a selection of dat
+  select(Year, Region, Index, Source, CO2eq) %>% # select only the these columns
+  filter(Region == "Nova Scotia") %>% # apply a filter for only Nova Scotia
+  filter(Year == "2018") %>% # apply a filter for only Nova Scotia
+  filter(Index == 1 | # oil and gas production
+           Index == 16 | # electricity
+           Index == 17 | # transportation
+           Index == 25 | # heavy industry
+           Index == 33 | # buildings
+           Index == 36 | # agriculture
+           Index == 40 | # waste
+           Index == 44 | # coal production
+           Index == 45 # light industry
+         )
+```
+
+With this in hand, we can visualize the various sources of Nova Scotia's emissions in 2018. This time, we can plot the categories on the y axis to improve readability. It will become clear that electrification of Nova Scotia's transportation sector (i.e. electric cars) can help, though given that much of our emissions are from electricity, it might make more sense to invest in clean energy first.
+
+```{r}
+ggplot(ns, aes(x=as.numeric(CO2eq),y=Source)) + # plot y as the categorical variables
+  geom_bar(position="stack", stat="identity") + 
+  xlab("GHG Emissions (CO2e)") + # x label
+  ylab("Source") + # y label
+  ggtitle("Sources of Emissions in Nova Scotia 2018") # graph title
+```
+
+### Challenge Question 4 (2 points)
+
+Based on what you learned in this lab, try to identify the major sources of emissions for other provinces (e.g. Ontario, Quebec). Do you think that the government's policy can help lower emissions in these provinces? What about Alberta and Saskatchewan?
+
+__After completing this question you should be ready to start exploring on your own, and work your way to productivity. I hope this was a useful introduction to R!__
